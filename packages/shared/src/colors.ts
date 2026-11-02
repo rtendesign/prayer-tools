@@ -51,10 +51,12 @@ export function brandColor(color: string | null | undefined): BrandColorInfo {
   return { color: hex, textColor, tooPale: onWhite < 3 }
 }
 
-export function brandForeground(color: string): string {
+export function brandForeground(color: string, background = '#ffffff'): string {
   let rgb = parseHex(color) ?? parseHex(DEFAULT_BRAND_COLOR)!
-  while (contrastRatio(rgb, WHITE) < 4.5) {
-    rgb = rgb.map(c => Math.max(0, Math.floor(c * 0.95))) as [number, number, number]
+  const surface = parseHex(background) ?? WHITE
+  const lighten = luminance(surface) < 0.179
+  while (contrastRatio(rgb, surface) < 4.5) {
+    rgb = rgb.map(c => lighten ? Math.min(255, Math.ceil(c + (255 - c) * 0.05)) : Math.max(0, Math.floor(c * 0.95))) as [number, number, number]
   }
   return `#${rgb.map(c => c.toString(16).padStart(2, '0')).join('')}`
 }

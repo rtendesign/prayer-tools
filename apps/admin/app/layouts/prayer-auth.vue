@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const { public: { platformUrl } } = useRuntimeConfig()
+const mode = useColorMode()
 </script>
 
 <template>
@@ -10,7 +11,10 @@ const { public: { platformUrl } } = useRuntimeConfig()
           <img src="/prayer-tools-logo.png" alt="" width="120" height="38" class="logo-symbol absolute inset-0 h-full w-full" />
           <img src="/prayer-tools-logo.png" alt="" width="120" height="38" class="logo-text absolute inset-0 h-full w-full" />
         </a>
-        <a :href="platformUrl" class="text-sm font-medium text-white/80 hover:text-white">Back to home</a>
+        <div class="flex items-center gap-4">
+          <ClientOnly><UButton color="neutral" variant="ghost" class="text-white" :icon="mode.value === 'dark' ? 'i-lucide-sun' : 'i-lucide-moon'" :aria-label="mode.value === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'" @click="mode.preference = mode.value === 'dark' ? 'light' : 'dark'" /></ClientOnly>
+          <a :href="platformUrl" class="text-sm font-medium text-white/80 hover:text-white">Back to home</a>
+        </div>
       </div>
     </header>
     <main class="flex flex-1 items-center justify-center px-6 py-12 sm:py-16">
@@ -49,5 +53,21 @@ const { public: { platformUrl } } = useRuntimeConfig()
 .signup-theme :deep(form button[type='submit']:hover:not(:disabled)) { background: #a94300; }
 .signup-theme :deep(h1) { letter-spacing: -0.035em; }
 .logo-symbol { clip-path: inset(0 69% 0 0); }
+.dark .signup-theme {
+  --ui-primary: #ffad66;
+  --ui-bg: #202c3a;
+  --ui-bg-muted: #141c26;
+  --ui-bg-elevated: #263545;
+  --ui-bg-accented: #34465a;
+  --ui-text: #e2e8f0;
+  --ui-text-highlighted: #f8fafc;
+  --ui-text-toned: #d5dfea;
+  --ui-text-muted: #b8c5d4;
+  --ui-text-dimmed: #a3b3c6;
+  --ui-border: #405269;
+  --ui-border-accented: #647892;
+  background: #141c26;
+  color: #e2e8f0;
+}
 .logo-text { clip-path: inset(0 0 0 31%); filter: brightness(0) invert(1); }
 </style>

@@ -76,9 +76,10 @@ async function setShareImage(url: string | undefined) {
 <template>
   <div
     v-if="data && site"
-    class="max-w-4xl mx-auto space-y-6"
+    class="max-w-[96rem] mx-auto space-y-6"
   >
     <PtLandingTabs />
+    <div class="max-w-4xl space-y-6">
     <header>
       <h1 class="text-2xl font-bold">
         Share
@@ -309,5 +310,6 @@ async function setShareImage(url: string | undefined) {
       :language="site.site.default_language"
       @select="(a) => { pickingImage = false; setShareImage(a.url) }"
     />
+    </div>
   </div>
 </template>

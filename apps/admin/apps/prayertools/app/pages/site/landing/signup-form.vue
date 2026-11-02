@@ -132,9 +132,10 @@ async function saveOption(o: Option, patch: Record<string, unknown>) {
 <template>
   <div
     v-if="site"
-    class="max-w-4xl mx-auto space-y-8"
+    class="max-w-[96rem] mx-auto space-y-6"
   >
     <PtLandingTabs />
+    <div class="max-w-4xl space-y-8">
     <header>
       <h1 class="text-2xl font-bold">
         Signup form
@@ -485,5 +486,6 @@ async function saveOption(o: Option, patch: Record<string, unknown>) {
         </div>
       </template>
     </UModal>
+    </div>
   </div>
 </template>

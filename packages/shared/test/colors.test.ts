@@ -7,6 +7,7 @@ describe('theme contrast', () => {
       const color = `#${[r, g, b].map(c => c.toString(16).padStart(2, '0')).join('')}`
       expect(contrastRatio(parseHex(color)!, parseHex(brandColor(color).textColor)!)).toBeGreaterThanOrEqual(4.5)
       expect(contrastRatio(parseHex(brandForeground(color))!, [255, 255, 255])).toBeGreaterThanOrEqual(4.5)
+      expect(contrastRatio(parseHex(brandForeground(color, '#202c3a'))!, parseHex('#202c3a')!)).toBeGreaterThanOrEqual(4.5)
     }
   })
 })

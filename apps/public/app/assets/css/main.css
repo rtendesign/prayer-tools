@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
+@import "./dark-theme.css";
 
 @source "../../../../packages/shared/src";
 

@@ -53,12 +53,13 @@ async function send(kind: string) {
 </script>
 
 <template>
-  <div class="max-w-3xl mx-auto space-y-6">
+  <div class="max-w-6xl mx-auto space-y-6">
     <PtCampaignTabs
       v-if="typeof route.query.campaign === 'string'"
       :campaign-id="route.query.campaign"
     />
     <MarketingTabs v-else />
+    <div class="max-w-3xl space-y-6">
     <div class="flex flex-wrap items-center justify-between gap-3">
       <div>
         <h1 class="text-2xl font-semibold">
@@ -130,5 +131,6 @@ async function send(kind: string) {
         </div>
       </div>
     </UCard>
+    </div>
   </div>
 </template>

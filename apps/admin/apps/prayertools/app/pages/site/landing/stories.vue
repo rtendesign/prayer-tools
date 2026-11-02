@@ -36,8 +36,9 @@ async function setPublished(s: Story, published: boolean) {
 </script>
 
 <template>
-  <div class="max-w-4xl mx-auto space-y-6">
+  <div class="max-w-[96rem] mx-auto space-y-6">
     <PtLandingTabs />
+    <div class="max-w-4xl space-y-6">
     <header class="flex flex-wrap items-start justify-between gap-3">
       <div>
         <h1 class="text-2xl font-semibold">
@@ -160,5 +161,6 @@ async function setPublished(s: Story, published: boolean) {
         </p>
       </div>
     </UCard>
+    </div>
   </div>
 </template>

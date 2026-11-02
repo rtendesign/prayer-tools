@@ -816,5 +816,6 @@ async function publish() {
   .setup-step { width: 100%; padding: 1rem; }
   .step-description { display: block; }
 }
-:global(.dark) .setup-step.is-current { background: #472f1d; color: #ffb376; }
+.dark .setup-step.is-current { background: #3e3028; border-color: #ffad66; color: #fff2e7; }
+.dark .setup-step.is-current .step-description { color: #e4cbbb; }
 </style>

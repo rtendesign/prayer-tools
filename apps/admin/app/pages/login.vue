@@ -1,7 +1,6 @@
 <script setup lang="ts">
 definePageMeta({
   layout: 'prayer-auth',
-  colorMode: 'light'
 })
 
 const router = useRouter()

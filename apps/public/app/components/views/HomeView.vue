@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import heroPhotos from '~/utils/hero-photos.json'
+import ThemeToggle from '../ThemeToggle.vue'
 
 defineProps<{ adminUrl: string }>()
 const { t } = useI18n()
@@ -38,6 +39,7 @@ onBeforeUnmount(() => clearInterval(photoTimer))
           <img src="/prayer-tools-logo.png" alt="" width="120" height="38" class="logo-text absolute inset-0 h-full w-full" />
         </a>
         <nav class="flex items-center gap-4 sm:gap-8" aria-label="Main">
+          <ThemeToggle />
           <a href="/my" class="text-sm font-medium text-white/80 transition-colors hover:text-white">{{ t('my.title') }}</a>
           <a :href="adminUrl" class="rounded-full border border-white/30 px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-white/10">{{ t('home.sign_in') }}</a>
         </nav>

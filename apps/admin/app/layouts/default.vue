@@ -28,7 +28,7 @@ import AdminLayout from '#core/app/layouts/default.vue'
   --chrome-bg: #ffffff;
   --ui-radius: 0.75rem;
 }
-:global(.dark) .admin-theme {
+.dark .admin-theme {
   --ui-primary: #f58220;
   --ui-bg: #18202a;
   --ui-bg-muted: #202833;
@@ -84,4 +84,9 @@ import AdminLayout from '#core/app/layouts/default.vue'
 .admin-theme :deep(label[data-slot='item']:has([data-state='checked'])) { background: #fff0e3; border-color: #f58220; }
 .admin-theme :deep(label[data-slot='item']:has([data-state='checked']) [data-slot='label']) { color: #202833; }
 .admin-theme :deep(label[data-slot='item']:has([data-state='checked']) [data-slot='description']) { color: #57534e; }
+.dark .admin-theme :deep(label[data-slot='item']:has([data-state='checked'])) { background: #3e3028; border-color: #ffad66; }
+.dark .admin-theme :deep(label[data-slot='item']:has([data-state='checked']) [data-slot='label']) { color: #fff2e7; }
+.dark .admin-theme :deep(label[data-slot='item']:has([data-state='checked']) [data-slot='description']) { color: #d8c4b5; }
+.dark .admin-theme :deep([class*='bg-[#fff0e3]']) { background-color: #3e3028; color: #ffad66; }
+.dark .admin-theme :deep([class*='text-[#a94300]']) { color: #ffad66; }
 </style>

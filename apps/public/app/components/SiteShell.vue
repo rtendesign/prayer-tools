@@ -1,13 +1,16 @@
 <script setup lang="ts">
 import { DEFAULT_BRAND_COLOR, brandColor, brandForeground } from '@prayertools/shared/colors'
+import ThemeToggle from './ThemeToggle.vue'
 
 const props = defineProps<{ page: string }>()
 const { site, link, st, campaignLink } = useSite()
 const { t } = useI18n()
+const mode = useColorMode()
+const foreground = computed(() => brandForeground(site.value.brand.color, mode.value === 'dark' ? '#202c3a' : '#ffffff'))
 const themeStyle = computed(() => ({
   '--brand-text': brandColor(site.value.brand.color).textColor,
-  '--brand-foreground': brandForeground(site.value.brand.color),
-  '--ui-primary': brandForeground(site.value.brand.color)
+  '--brand-foreground': foreground.value,
+  '--ui-primary': foreground.value
 }))
 
 const nav = computed(() => {
@@ -37,6 +40,7 @@ const showFeedback = computed(() => !!site.value.feedback && props.page !== 'emb
           <NuxtLink v-for="item in nav" :key="item.to" :to="item.to" class="underline-offset-4 hover:underline">{{ item.label }}</NuxtLink>
         </nav>
         <LanguageSwitcher />
+        <ThemeToggle />
       </div>
     </header>
 
