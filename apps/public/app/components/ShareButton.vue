@@ -39,7 +39,7 @@ async function copy() {
 
 <template>
   <div class="flex flex-wrap items-center gap-2">
-    <UButton :size="props.size" :variant="props.variant" icon="i-lucide-share-2" :label="props.label ?? t('share.button')" @click="share" />
+    <UButton :size="props.size" :variant="props.variant" class="campaign-themed-button" icon="i-lucide-share-2" :label="props.label ?? t('share.button')" @click="share" />
     <UButton :size="props.size" variant="ghost" color="neutral" :icon="copied ? 'i-lucide-check' : 'i-lucide-link'" :label="copied ? t('share.copied') : t('share.copy')" @click="copy" />
   </div>
 </template>

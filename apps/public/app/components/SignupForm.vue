@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { SignupFormView } from '~~/shared/view'
-import type { SlotCounts } from '@prayertools/shared/coverage'
 import { browserTimezone, newCommitment, timezones, formatTime, type CommitmentInput } from '~/utils/commitment'
+import CoverageView from './views/CoverageView.vue'
 
 const props = defineProps<{ form: SignupFormView }>()
 const emit = defineEmits<{ joined: [verify: boolean] }>()
@@ -13,14 +13,6 @@ const campaign = computed(() => site.value.campaign!)
 const tzItems = timezones()
 const isCoverage = computed(() => campaign.value.goal === 'coverage')
 
-// 24/7 campaigns pick each time on the coverage picker; without coverage data
-// the plain time field is shown instead.
-const { data: coverage, status: coverageStatus } = useFetch<SlotCounts>('/api/coverage.json', {
-  query: { campaign: campaign.value.id },
-  server: false,
-  immediate: isCoverage.value
-})
-const usePicker = computed(() => isCoverage.value && coverageStatus.value !== 'error')
 
 function blankCommitment(): CommitmentInput {
   const c = newCommitment(campaign.value.durationRule, campaign.value.defaultDuration, campaign.value.cadence)
@@ -80,13 +72,13 @@ async function submit() {
     error.value = t('errors.commitments')
     return
   }
-  if (state.commitments.some(c => !c.time)) {
+  if (!state.picks.length && state.commitments.some(c => !c.time)) {
     error.value = t('errors.time')
     return
   }
   sending.value = true
   try {
-    const commitments: Record<string, unknown>[] = state.commitments.map(c => ({
+    const commitments: Record<string, unknown>[] = state.commitments.filter(c => !!c.time).map(c => ({
       kind: 'recurring',
       frequency: c.frequency,
       days_of_week: c.frequency === 'weekly' ? c.days_of_week : [],
@@ -139,7 +131,7 @@ function onIdToken(provider: 'google' | 'apple', token: string) {
 
 <template>
   <form class="max-w-2xl mx-auto space-y-8" novalidate @submit.prevent="submit">
-    <fieldset class="space-y-4">
+    <fieldset class="min-w-0 space-y-4">
           <legend class="text-lg font-semibold">{{ t('signup.contact_title') }}</legend>
           <SignInButtons
             v-if="(form.googleClientId || form.appleServicesId) && !state.idToken"
@@ -161,29 +153,17 @@ function onIdToken(provider: 'google' | 'apple', token: string) {
             <UCheckbox v-else v-model="(state.answers[f.key] as boolean)" :label="f.label" :required="f.required" />
           </UFormField>
         </fieldset>
-    <fieldset class="space-y-4">
+    <fieldset class="min-w-0 space-y-4">
         <legend class="text-lg font-semibold">{{ t('signup.when_title') }}</legend>
         <p class="text-sm text-stone-600">{{ t(isCoverage ? 'signup.when_help_coverage' : 'signup.when_help') }}</p>
-        <div v-for="(c, i) in state.commitments" :key="i" class="rounded-lg border border-stone-200 bg-white p-4 space-y-3">
+        <div class="min-w-0 w-full box-border space-y-4" :class="isCoverage ? 'rounded-lg border border-stone-300 bg-stone-50 p-5 sm:p-6' : ''">
+        <h3 v-if="isCoverage" class="flex items-center gap-2 text-lg font-semibold"><UIcon name="i-lucide-repeat" class="size-5 text-(--ui-primary)" />{{ t('signup.regular_title') }}</h3>
+        <p v-if="isCoverage" class="text-sm text-stone-600">{{ t('signup.regular_help') }}</p>
+        <div v-for="(c, i) in state.commitments" :key="i" class="min-w-0 space-y-3" :class="isCoverage ? 'border-t border-stone-200 pt-4' : 'rounded-lg border border-stone-200 bg-white p-4'">
           <CommitmentFields compact v-model="state.commitments[i]!" :duration-rule="campaign.durationRule" :durations="campaign.durations" :id-prefix="`c${i}`" :lang="site.lang" />
-          <template v-if="usePicker">
-            <CoveragePicker
-              compact
-              v-if="coverage"
-              v-model="state.commitments[i]!.time"
-              :counts="coverage"
-              :tz="state.timezone"
-              :weekdays="c.frequency === 'weekly' ? c.days_of_week : []"
-              :duration="c.duration_min ?? campaign.defaultDuration"
-              :lang="site.lang"
-              :id-prefix="`c${i}`"
-            />
-            <p v-else class="text-sm text-stone-600">{{ t('common.loading') }}</p>
-          </template>
-          <p v-if="usePicker && /^\d{2}:\d{2}$/.test(c.time)" class="rounded-lg bg-stone-50 border border-stone-200 p-3 text-sm font-medium" aria-live="polite">{{ t('picker.commitment_summary', { frequency: t(c.frequency === 'daily' ? 'commitment.daily' : 'commitment.weekly'), time: formatTime(c.time, site.lang), duration: c.duration_min ?? campaign.defaultDuration, timezone: state.timezone }) }}</p>
           <UButton v-if="state.commitments.length > 1 || state.picks.length" variant="link" color="neutral" icon="i-lucide-x" :label="t('commitment.remove')" @click="state.commitments.splice(i, 1)" />
         </div>
-        <div v-if="state.picks.length" class="rounded-lg border border-stone-200 bg-white p-4">
+        <div v-if="state.picks.length && !isCoverage" class="rounded-lg border border-stone-200 bg-white p-4">
           <p class="font-medium">{{ t('signup.picked_times') }}</p>
           <ul class="mt-2 space-y-1">
             <li v-for="p in state.picks" :key="p" class="flex items-center gap-2">
@@ -193,9 +173,26 @@ function onIdToken(provider: 'google' | 'apple', token: string) {
           </ul>
         </div>
         <div class="flex flex-wrap gap-3">
-          <UButton v-if="campaign.startMode !== 'join'" variant="link" icon="i-lucide-plus" class="px-0 text-sm" :label="t('signup.add_time')" @click="addCommitment" />
-          <UButton v-if="campaign.goal === 'coverage'" variant="ghost" icon="i-lucide-calendar" :label="t('signup.pick_slots')" :to="link('coverage')" />
+          <UButton v-if="campaign.startMode !== 'join'" variant="link" icon="i-lucide-plus" class="px-0 text-sm" :label="t(isCoverage ? 'signup.add_schedule' : 'signup.add_time')" @click="addCommitment" />
         </div>
+        </div>
+        <div v-if="isCoverage" class="min-w-0 w-full box-border space-y-4 rounded-lg border border-stone-300 bg-white p-5 sm:p-6 !mt-8">
+          <h3 class="flex items-center gap-2 text-lg font-semibold"><UIcon name="i-lucide-calendar-days" class="size-5 text-(--ui-primary)" />{{ t('signup.dates_title') }}</h3>
+          <p class="text-sm text-stone-600">{{ t('signup.dates_help') }}</p>
+          <CoverageView v-model:picks="state.picks" embedded :timezone="state.timezone" />
+        </div>
+          <div v-if="isCoverage && (state.picks.length || state.commitments.some(c => c.time))" class="rounded-lg border border-stone-200 bg-stone-50 p-4 space-y-3">
+            <h3 class="font-semibold">{{ t('signup.summary_title') }}</h3>
+            <ul class="space-y-3 text-sm">
+              <template v-for="(c, i) in state.commitments" :key="i">
+                <li v-if="/^\d{2}:\d{2}$/.test(c.time)" class="flex items-start justify-between gap-3">
+                  <span>{{ t('picker.commitment_summary', { frequency: c.frequency === 'daily' ? t('commitment.daily') : c.days_of_week.map(d => new Intl.DateTimeFormat(site.lang, { weekday: 'short', timeZone: 'UTC' }).format(new Date(Date.UTC(2024, 0, 7 + d)))).join(', '), time: formatTime(c.time, site.lang), duration: c.duration_min ?? campaign.defaultDuration, timezone: state.timezone }) }}</span>
+                  <UButton size="xs" variant="ghost" color="neutral" icon="i-lucide-x" :aria-label="t('commitment.remove')" @click="state.commitments.splice(i, 1)" />
+                </li>
+              </template>
+              <li v-for="p in state.picks" :key="p" class="flex items-start justify-between gap-3"><span>{{ pickLabel(p) }} · {{ formatMinutes(campaign.defaultDuration, site.lang) }}</span><UButton size="xs" variant="ghost" color="neutral" icon="i-lucide-x" :aria-label="t('commitment.remove')" @click="removePick(p)" /></li>
+            </ul>
+          </div>
         <div class="space-y-3">
           <p class="text-sm text-stone-600">{{ t('signup.times_shown', { timezone: state.timezone }) }}
             <button type="button" class="ms-2 text-(--ui-primary) underline underline-offset-4" :aria-expanded="showTimezone" @click="showTimezone = !showTimezone">{{ t('signup.change_timezone') }}</button>
@@ -226,7 +223,7 @@ function onIdToken(provider: 'google' | 'apple', token: string) {
     <TurnstileWidget ref="turnstile" v-model="state.turnstile" :site-key="site.turnstileSiteKey" />
     <UAlert v-if="error" color="error" variant="soft" icon="i-lucide-circle-alert" :title="error" role="alert" />
     <div class="space-y-3">
-      <UButton type="submit" size="xl" block :loading="sending" :label="st('landing.signup.title')" />
+      <UButton type="submit" size="xl" block class="campaign-themed-button" :loading="sending" :label="st('landing.signup.title')" />
       <p class="text-center text-sm text-stone-600">{{ t(state.idToken ? 'signup.reassurance_verified' : 'signup.reassurance') }}</p>
     </div>
   </form>

@@ -127,6 +127,12 @@
     "prompt_body": "Know someone who would pray too? Send them the link."
   },
   "signup": {
+    "regular_title": "Pray regularly",
+    "regular_help": "Choose a repeating schedule, individual dates below, or both. Leave the time blank if you only want individual dates.",
+    "add_schedule": "Add another recurring schedule",
+    "dates_title": "Choose individual dates",
+    "dates_help": "Select specific dates and times. Every slot stays visible, including those already covered.",
+    "summary_title": "Your prayer commitments",
     "choose_days": "Choose specific days",
     "times_shown": "Times shown in {timezone}",
     "change_timezone": "Change",
@@ -185,6 +191,11 @@
     "praying_now": "Praying now"
   },
   "coverage": {
+    "choose_day": "1. Choose a day",
+    "choose_times": "2. Choose prayer times for {date}",
+    "hours_need": "{hours} hours need prayer",
+    "legend": "Prayer calendar key",
+    "covered": "Already covered",
     "needs_prayer": "Needs prayer",
     "selected": "Selected",
     "load_error": "The prayer calendar could not be loaded.",

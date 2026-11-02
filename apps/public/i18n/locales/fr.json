@@ -127,6 +127,12 @@
     "prompt_body": "Vous connaissez quelqu'un qui aimerait prier aussi ? Envoyez-lui le lien."
   },
   "signup": {
+    "regular_title": "Prier régulièrement",
+    "regular_help": "Choisissez un horaire régulier, des dates individuelles ci-dessous ou les deux. Laissez l’heure vide pour choisir uniquement des dates individuelles.",
+    "add_schedule": "Ajouter un horaire régulier",
+    "dates_title": "Choisir des dates individuelles",
+    "dates_help": "Sélectionnez des dates et heures précises. Tous les créneaux restent visibles, même ceux déjà couverts.",
+    "summary_title": "Vos engagements de prière",
     "choose_days": "Choisir certains jours",
     "times_shown": "Horaires dans le fuseau {timezone}",
     "change_timezone": "Modifier",
@@ -185,6 +191,11 @@
     "praying_now": "En prière maintenant"
   },
   "coverage": {
+    "choose_day": "1. Choisissez un jour",
+    "choose_times": "2. Choisissez les horaires de prière pour {date}",
+    "hours_need": "{hours} heures à couvrir",
+    "legend": "Légende du calendrier",
+    "covered": "Déjà couvert",
     "needs_prayer": "Besoin de prière",
     "selected": "Sélectionné",
     "load_error": "Le calendrier de prière n’a pas pu être chargé.",

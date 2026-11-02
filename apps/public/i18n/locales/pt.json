@@ -127,6 +127,12 @@
     "prompt_body": "Conhece alguém que também oraria? Envie o link para essa pessoa."
   },
   "signup": {
+    "regular_title": "Orar regularmente",
+    "regular_help": "Escolha um horário recorrente, datas individuais abaixo ou ambos. Deixe o horário vazio para escolher apenas datas individuais.",
+    "add_schedule": "Adicionar outro horário recorrente",
+    "dates_title": "Escolher datas individuais",
+    "dates_help": "Selecione datas e horários específicos. Todos os horários ficam visíveis, inclusive os já cobertos.",
+    "summary_title": "Seus compromissos de oração",
     "choose_days": "Escolher dias específicos",
     "times_shown": "Horários em {timezone}",
     "change_timezone": "Alterar",
@@ -185,6 +191,11 @@
     "praying_now": "Orando agora"
   },
   "coverage": {
+    "choose_day": "1. Escolha um dia",
+    "choose_times": "2. Escolha horários de oração para {date}",
+    "hours_need": "{hours} horas precisam de oração",
+    "legend": "Legenda do calendário",
+    "covered": "Já coberto",
     "needs_prayer": "Precisa de oração",
     "selected": "Selecionado",
     "load_error": "Não foi possível carregar o calendário de oração.",
